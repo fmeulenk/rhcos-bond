@@ -1,0 +1,6 @@
+=Red Hat CoreOS Bond POC
+Felix Meulenkamp <fmeulenk@redhat.com>
+
+This repo is a proof of concept to create a Red Hat CoreOS VM on a localhost to show case the ability of RHCOS to connect to multiple networks while using a bonding or teaming.
+
+
