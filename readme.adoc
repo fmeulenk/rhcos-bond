@@ -1,6 +1,61 @@
 = Red Hat CoreOS Bond POC
 Felix Meulenkamp <fmeulenk@redhat.com>
 
-This repo is a proof of concept to create a Red Hat CoreOS VM on a localhost to show case the ability of RHCOS to connect to multiple networks while using a bonding or teaming.
+This repo is a proof of concept to create a Red Hat CoreOS VM on a localhost to show case the ability of RHCOS to connect to multiple networks while using bonding.
 
+== Dependencies
 
+* RHEL Subscription for OpenShift
+* python, tmux, virt-install, openssl installed
+
+This POC uses *firewalld*.
+
+== Prepare
+
+Download the RHCOS images and kernel.
+
+[script,shell]
+----
+wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-metal-bios.raw.gz
+mkdir rhcos-install
+wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-installer-kernel -O rhcos-install/vmlinuz
+wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-installer-initramfs.img -O rhcos-install/initramfs.img
+
+cat <<EOF > rhcos-install/.treeinfo
+[general]
+arch = x86_64
+family = Red Hat CoreOS
+platforms = x86_64
+version = 4.2.0
+[images-x86_64]
+initrd = initramfs.img
+kernel = vmlinuz
+EOF
+----
+
+Create an network called `iso1` on libvirt.
+
+== Configure the VM
+
+Twiddle with the *ignition* config in link:test.ign[`test.ign`].
+Change at least the password and ssh-key for the user `core`.
+
+.See this section for password and key in test.ign
+[script,json]
+----
+"passwd": {
+  "users": [{
+    "groups": ["sudo"],
+    "name": "core",
+    "passwordHash": "$6$S.dEzaI//ILfQNIi$tXbbbNFjhjgPyztQ6GoPNHch5nX9bwZtMAsl60hlgMADEUsjRTEp0BzKX91jJxuaXDD2Hsot4UKtkjq9jF2Ob0",
+    "sshAuthorizedKeys": ["ssh-rsa AAAAB3Nza...
+----
+
+The link:test.sh[`test.sh`] has four times the `--network` entry to generate four interfaces on two networks.
+
+== Run
+
+Run the link:test.sh[`test.sh`] script to start an webserver and install the VM.
+
+Once installed, the VM will shutdown.
+Afterwards you can just start the VM using *virt-manager* or *virsh*.

@@ -1,30 +1,15 @@
 #!/usr/bin/env bash
 
-# See OpenShift 4 UPI Installation on KVM/Libvirt
+# Based on an internal document: OpenShift 4 UPI Installation on KVM/Libvirt
 # https://mojo.redhat.com/people/knaeem/blog/2019/08/17/openshift-4-upi-installation-on-kvmlibvirt
 
-# Create password for user core and reuse an old key
+# 1. Create password for user core and reuse an old key
 # echo test | openssl passwd -stdin -6
 # Add that and change ssh-key in test.ign
 
-# Download images
-# wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-metal-bios.raw.gz
-# mkdir rhcos-install
-# wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-installer-kernel -O rhcos-install/vmlinuz
-# wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-installer-initramfs.img -O rhcos-install/initramfs.img
+# 2. Download images
 #
-# cat <<EOF > rhcos-install/.treeinfo
-# [general]
-# arch = x86_64
-# family = Red Hat CoreOS
-# platforms = x86_64
-# version = 4.2.0
-# [images-x86_64]
-# initrd = initramfs.img
-# kernel = vmlinuz
-# EOF
-
-# Create a new isolated network called "iso1"
+# 3. Create a new isolated network called "iso1"
 
 VIR_NET="default"
 VIR_NET2="iso1"
