@@ -1,0 +1,87 @@
+{
+  "ignition": {
+    "version": "2.2.0"
+  },
+  "passwd": {
+    "users": [{
+      "groups": ["sudo"],
+      "name": "core",
+      "passwordHash": "$6$S.dEzaI//ILfQNIi$tXbbbNFjhjgPyztQ6GoPNHch5nX9bwZtMAsl60hlgMADEUsjRTEp0BzKX91jJxuaXDD2Hsot4UKtkjq9jF2Ob0",
+      "sshAuthorizedKeys": ["ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDcZkBiC2RwVnNYOGZuLdp26DjQz/diiEE34V3HeyI6GhF5dFF4V/d84mf+IUUErj1BDcrLgfye6SJZI6eDKlPxMI/gGlJNutGNrd62jdFXJ1OJJxvSJ3JV2A5rizLXnIb+eOJPVDayILuAl3weguQdn5JYC6ctekYBsfPN/HIWmoUy42YPeMy7SxNi0LBmqY4m9OdLSbtWsAJstC5JeeSx3gKVr/Ae0cIDtCohxNjG7pz5TzK7fbUXaLqlyv8y79eerTW7HHwQikRWPwjgXo0ulxZ7wCo2BqhCR1D6FhoOp5W5kIb1nyhFMQryRmpQiAUP9F6OpYbLWd2swNkIj1tJ ansible-training"]
+    }]
+  },
+  "storage": {
+    "files": [{
+        "contents": {
+          "source": "data:text/plain;charset=utf-8,rhcos.fme.local",
+          "verification": {}
+        },
+        "filesystem": "root",
+        "group": {},
+        "mode": 420,
+        "path": "/etc/hostname",
+        "user": {}
+      },
+      {
+        "contents": {
+          "source": "data:text/plain;charset=utf-8;base64,REVWSUNFPWJvbmQwCk5BTUU9Ym9uZDAKQk9ORElOR19NQVNURVI9eWVzCk9OQk9PVD15ZXMKQk9PVFBST1RPPWRoY3A=",
+          "verification": {}
+        },
+        "filesystem": "root",
+        "path": "/etc/sysconfig/network-scripts/ifcfg-bond0",
+        "mode": 420,
+        "user": {}
+      },
+      {
+        "contents": {
+          "source": "data:text/plain;charset=utf-8;base64,REVWSUNFPWVuczMKTkFNRT1lbnMzClRZUEU9RXRoZXJuZXQKQk9PVFBST1RPPW5vbmUKT05CT09UPXllcwpNQVNURVI9Ym9uZDAKU0xBVkU9eWVz",
+          "verification": {}
+        },
+        "filesystem": "root",
+        "path": "/etc/sysconfig/network-scripts/ifcfg-ens3",
+        "mode": 420,
+        "user": {}
+      },
+      {
+        "contents": {
+          "source": "data:text/plain;charset=utf-8;base64,REVWSUNFPWVuczQKTkFNRT1lbnM0ClRZUEU9RXRoZXJuZXQKQk9PVFBST1RPPW5vbmUKT05CT09UPXllcwpNQVNURVI9Ym9uZDAKU0xBVkU9eWVz",
+          "verification": {}
+        },
+        "filesystem": "root",
+        "path": "/etc/sysconfig/network-scripts/ifcfg-ens4",
+        "mode": 420,
+        "user": {}
+      },
+      {
+        "contents": {
+          "source": "data:text/plain;charset=utf-8;base64,REVWSUNFPWJvbmQxCk5BTUU9Ym9uZDEKQk9ORElOR19NQVNURVI9eWVzCk9OQk9PVD15ZXMKQk9PVFBST1RPPWRoY3A=",
+          "verification": {}
+        },
+        "filesystem": "root",
+        "path": "/etc/sysconfig/network-scripts/ifcfg-bond1",
+        "mode": 420,
+        "user": {}
+      },
+      {
+        "contents": {
+          "source": "data:text/plain;charset=utf-8;base64,REVWSUNFPWVuczUKTkFNRT1lbnM1ClRZUEU9RXRoZXJuZXQKQk9PVFBST1RPPW5vbmUKT05CT09UPXllcwpNQVNURVI9Ym9uZDEKU0xBVkU9eWVz",
+          "verification": {}
+        },
+        "filesystem": "root",
+        "path": "/etc/sysconfig/network-scripts/ifcfg-ens5",
+        "mode": 420,
+        "user": {}
+      },
+      {
+        "contents": {
+          "source": "data:text/plain;charset=utf-8;base64,REVWSUNFPWVuczYKTkFNRT1lbnM2ClRZUEU9RXRoZXJuZXQKQk9PVFBST1RPPW5vbmUKT05CT09UPXllcwpNQVNURVI9Ym9uZDEKU0xBVkU9eWVz",
+          "verification": {}
+        },
+        "filesystem": "root",
+        "path": "/etc/sysconfig/network-scripts/ifcfg-ens6",
+        "mode": 420,
+        "user": {}
+      }
+    ]
+  }
+}
