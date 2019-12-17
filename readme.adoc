@@ -13,14 +13,24 @@ This POC uses *firewalld*.
 == Prepare
 
 Download the RHCOS images and kernel.
+Change for this into the directory of this cloned Git repository.
 
-[script,shell]
+.Get files
+[source,console]
 ----
+# Get the Bios image
 wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-metal-bios.raw.gz
-mkdir rhcos-install
-wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-installer-kernel -O rhcos-install/vmlinuz
-wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-installer-initramfs.img -O rhcos-install/initramfs.img
 
+mkdir -p rhcos-install
+# Kernel
+wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-installer-kernel -O rhcos-install/vmlinuz
+# Ramdisk
+wget https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/4.2/4.2.0/rhcos-4.2.0-x86_64-installer-initramfs.img -O rhcos-install/initramfs.img
+----
+
+.Create an treeinfo for Anaconda
+[source,ini]
+----
 cat <<EOF > rhcos-install/.treeinfo
 [general]
 arch = x86_64
@@ -35,21 +45,90 @@ EOF
 
 Create an network called `iso1` on libvirt.
 
+[source,xml]
+----
+<network>
+  <name>iso1</name>
+  <uuid>9faca860-2608-464b-899a-157965075fee</uuid>
+  <bridge name="virbr1" stp="on" delay="0"/>
+  <mac address="52:54:00:ac:d7:65"/>
+  <domain name="iso1.fme.local"/>
+  <ip address="192.168.101.1" netmask="255.255.255.0">
+    <dhcp>
+      <range start="192.168.101.128" end="192.168.101.254"/>
+    </dhcp>
+  </ip>
+  <ip family="ipv6" address="fd00:c0a8:6500::1" prefix="64">
+    <dhcp>
+      <range start="fd00:c0a8:6500::100" end="fd00:c0a8:6500::1ff"/>
+    </dhcp>
+  </ip>
+</network>
+----
+
 == Configure the VM
 
 Twiddle with the *ignition* config in link:test.ign[`test.ign`].
 Change at least the password and ssh-key for the user `core`.
 
-.See this section for password and key in test.ign
-[script,json]
+See this section for password and key in test.ign
+
+.Setting the password and key
+[source,json]
 ----
 "passwd": {
   "users": [{
     "groups": ["sudo"],
     "name": "core",
     "passwordHash": "$6$S.dEzaI//ILfQNIi$tXbbbNFjhjgPyztQ6GoPNHch5nX9bwZtMAsl60hlgMADEUsjRTEp0BzKX91jJxuaXDD2Hsot4UKtkjq9jF2Ob0",
-    "sshAuthorizedKeys": ["ssh-rsa AAAAB3Nza...
+    "sshAuthorizedKeys": ["ssh-rsa AAAAB3Nza..."]
+  }]
+}
 ----
+
+=== Configure the network
+
+The network is configured via creating the corresponding `ifcfg`-files.
+
+Every file is defined by a `contents` block in the `storage`-section.
+See here the configuration for `bond0`.
+
+.Network configuration for bond0
+[source,json]
+-----
+{
+  "contents": {
+    "source": "data:text/plain;charset=utf-8;base64,REVWSUNFPWJvbmQwCk5BTUU9Ym9uZDAKQk9ORElOR19NQVNURVI9eWVzCk9OQk9PVD15ZXMKQk9PVFBST1RPPWRoY3A=",
+    "verification": {}
+  },
+  "filesystem": "root",
+  "path": "/etc/sysconfig/network-scripts/ifcfg-bond0",
+  "mode": 420,
+  "user": {}
+}
+-----
+
+While most of it is very self explaining, the `source` part was build by using `base64 -w0` for encoding the file.
+This will turn of wrapping and produces one long string.
+Ignition also needs to know the type and encoding of the string, hence the `data:text/plain;charset=utf-8;base64,` header in front of the Base64 string.
+
+The corresponding file looks like this:
+
+.Resulting ifcfg-bond0 file on the system
+[source,ini]
+----
+DEVICE=bond0
+NAME=bond0
+BONDING_MASTER=yes
+ONBOOT=yes
+BOOTPROTO=dhcp
+----
+
+[NOTE]
+====
+The network card enumeration on my machines was starting consistently at `ens3`.
+This was also the case when I transferred this example to an running OpenShift 4.2 cluster on RHV.
+====
 
 The link:test.sh[`test.sh`] has four times the `--network` entry to generate four interfaces on two networks.
 
@@ -58,4 +137,4 @@ The link:test.sh[`test.sh`] has four times the `--network` entry to generate fou
 Run the link:test.sh[`test.sh`] script to start an webserver and install the VM.
 
 Once installed, the VM will shutdown.
-Afterwards you can just start the VM using *virt-manager* or *virsh*.
+Afterwards, you can just restart the VM using *virt-manager* or *virsh*.
